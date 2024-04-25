@@ -2501,9 +2501,15 @@ END  RPTGETAUDITSTATUS;
 FUNCTION GET_DOCS_FOR_DIV(i_user_id IN VARCHAR2,i_main_case_id IN NUMBER,i_div_code IN VARCHAR2)RETURN SYS_REFCURSOR AS
   cur1 SYS_REFCURSOR;
   BEGIN
+  IF (i_div_code=859)THEN
     OPEN cur1 FOR
     SELECT * FROM AUDIT_DOC_TBL
-    WHERE  DOC_CASE_ID=i_main_case_id AND Del_Flag!=1;
+    WHERE  DOC_CASE_ID=i_main_case_id AND Del_Flag!=1 ORDER BY Doc_Img_Created_Date DESC;
+  ELSE
+    OPEN cur1 FOR
+    SELECT * FROM AUDIT_DOC_TBL
+    WHERE  DOC_CASE_ID=i_main_case_id AND Del_Flag!=1 AND ENABLE_FOR_BR!=1 ORDER BY Doc_Img_Created_Date DESC;
+  END IF;
     
     RETURN cur1;
 
