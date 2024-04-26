@@ -2045,7 +2045,7 @@ END UPDATE_INCIDENT_FROM_BR;
 FUNCTION UPDATE_INCIDENT_BY_BR(i_json IN CLOB,i_brComment IN BLOB,i_followComment IN BLOB)RETURN VARCHAR2 AS
     l_incident_id NUMBER;
     l_update_success CONSTANT VARCHAR2(7) := 'SUCCESS';
-    l_update_fail CONSTANT VARCHAR2(4) := 'FAIL';
+    l_update_fail CONSTANT VARCHAR2(50) := 'Fail to update incident in database';
     BEGIN
     SELECT JSON_VALUE(i_json,'$.incidentId')INTO l_incident_id FROM dual;
     
@@ -2090,7 +2090,7 @@ END UPDATE_INCIDENT_BY_BR;
 FUNCTION UPDATE_AUDIT_INCIDENT_FROM_AUDIT(i_json IN CLOB,i_incidentComment IN BLOB,i_brComment IN BLOB, i_furComment IN BLOB,i_followComment IN BLOB,i_qacomment IN BLOB) RETURN VARCHAR2 AS
     l_incident_id NUMBER;
     l_update_success CONSTANT VARCHAR2(7) := 'SUCCESS';
-    l_update_fail CONSTANT VARCHAR2(4) := 'FAIL';
+    l_update_fail CONSTANT VARCHAR2(50) := 'Fail to update incident in database';
     BEGIN
       --extracting incident id from the parameter--
       SELECT JSON_VALUE(i_json,'$.incidentId')INTO l_incident_id FROM dual;
@@ -2156,6 +2156,7 @@ FUNCTION UPDATE_AUDIT_INCIDENT_FROM_AUDIT(i_json IN CLOB,i_incidentComment IN BL
             
 --            BR_COMMENT=i_brComment,
             FUR_COMMENT=i_furComment,
+            QA_COMMENT=i_qacomment,
 --            FOLLOW_UP_COMMENT=i_followComment,
             
             OVERALL_RISK_VALUE=JSON_VALUE(i_json,'$.overallRiskValue')
@@ -2599,7 +2600,7 @@ create or replace PACKAGE BODY AUDIT_CHILD_CASE_PACK AS
     RETURN v_section_description;
     EXCEPTION
       WHEN NO_DATA_FOUND THEN
-        RETURN NULL; -- Or handle the exception as required
+        RETURN 'No data found'; -- Or handle the exception as required
       WHEN OTHERS THEN
       -- Handle other exceptions if necessary
       RAISE;
